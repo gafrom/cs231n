@@ -66,7 +66,7 @@ def svm_loss_naive(W, X, y, reg, delta = 1):
   return loss, dW
 
 
-def svm_loss_vectorized(W, X, y, reg):
+def svm_loss_vectorized(W, X, y, reg, delta = 1):
   """
   Structured SVM loss function, vectorized implementation.
 
@@ -80,7 +80,14 @@ def svm_loss_vectorized(W, X, y, reg):
   # Implement a vectorized version of the structured SVM loss, storing the    #
   # result in loss.                                                           #
   #############################################################################
-  pass
+  scores = np.matmul(X, W)
+  correct_class_scores = scores[range(y.shape[0]), y]
+  scores[range(y.shape[0]), y] -= delta
+
+  error_with_margin = scores - correct_class_scores[:, None] + delta
+  error_with_margin[error_with_margin < 0] = 0
+
+  loss = np.sum(error_with_margin) / X.shape[0]
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
