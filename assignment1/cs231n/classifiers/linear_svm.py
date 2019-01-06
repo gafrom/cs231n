@@ -1,7 +1,7 @@
 import numpy as np
 from random import shuffle
 
-def svm_loss_naive(W, X, y, reg):
+def svm_loss_naive(W, X, y, reg, delta = 1):
   """
   Structured SVM loss function, naive implementation (with loops).
 
@@ -30,7 +30,7 @@ def svm_loss_naive(W, X, y, reg):
     correct_class_score = scores[y[i]]
     
     # dW calculation
-    margin_vector = scores - correct_class_score + 1
+    margin_vector = scores - correct_class_score + delta
     margin_vector[y[i]] = 0 # skipping correct class
     num_positive_margins = np.count_nonzero(margin_vector > 0)
 
@@ -39,7 +39,7 @@ def svm_loss_naive(W, X, y, reg):
         dW[:, j] += -X[i] * num_positive_margins
         continue # skip true class to only loop over incorrect classes
 
-      margin = scores[j] - correct_class_score + 1 # note delta = 1
+      margin = scores[j] - correct_class_score + delta # note delta
       if margin > 0:
         loss += margin
         dW[:, j] += X[i]
